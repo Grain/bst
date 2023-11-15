@@ -62,6 +62,22 @@ void in_order(struct node * root)
     in_order(root->right);
 }
 
+bool search_it(struct node * root, int val)
+{
+    while (root)
+    {
+        if (val == root->val)
+            return true;
+
+        if (val < root->val)
+            root = root->left;
+        else
+            root = root->right;
+    }
+    return false;
+}
+
+
 bool search(struct node * root, int val)
 {
     if (!root)
@@ -140,7 +156,7 @@ struct node * delete(struct node * root, int val)
     {
         root->right = delete(root->right, val);
     }
-    else
+    else // we found the node to delete
     {
         // 0 or 1 child
         if (!root->left)
@@ -178,7 +194,22 @@ struct node * delete(struct node * root, int val)
     return root;
 }
 
-struct node * example()
+struct node * example1()
+{
+    struct node * root = alloc_node(4);
+
+    root->left = alloc_node(-5);
+    root->left->right = alloc_node(-1);
+    root->left->right->right = alloc_node(3);
+
+    root->right = alloc_node(7);
+    root->right->left = alloc_node(5);
+    root->right->right = alloc_node(9);
+
+    return root;
+}
+
+struct node * example2()
 {
     struct node * root = insert(NULL, 4);
     root = insert(root, -5);
@@ -193,7 +224,7 @@ struct node * example()
 
 int main()
 {
-    struct node * n = example();
+    struct node * n = example1();
 
     pre_order(n);
     printf("\n");
@@ -202,7 +233,7 @@ int main()
     post_order(n);
     printf("\n");
 
-    printf("%d\n", search(n, 4));
+    printf("%d\n", search_it(n, 4));
 
     n = delete(n, 4);
 
@@ -213,9 +244,7 @@ int main()
     post_order(n);
     printf("\n");
 
-    printf("%d\n", search(n, 4));
-
-    printf("%d\n", is_bst(n));
+    printf("%d\n", search_it(n, 4));
 
     free_node(n);
 }
